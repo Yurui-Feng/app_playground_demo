@@ -2,3 +2,5 @@ build
 venv
 .DS_Store
 .vscode
+app.spec
+dist

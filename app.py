@@ -2,13 +2,26 @@ import yaml
 import docker
 from flask import Flask, render_template, redirect, url_for
 import os
+import sys
 
 app = Flask(__name__)
 client = docker.from_env()
 
 # Load apps from apps.yaml
 def load_apps():
-    with open('apps.yaml', 'r') as file:
+    # Determine if the application is running as a pyinstaller executable
+    if getattr(sys, 'frozen', False):
+        # If the application is running as a pyinstaller executable, the apps.yaml file is in the same directory as the executable
+        # so we can use sys._MEIPASS to get the path to the directory
+        application_path = sys._MEIPASS
+    else:
+        # running as a normal python script
+        application_path = os.path.dirname(os.path.abspath(__file__))
+    
+    # construct the full path to the apps.yaml file
+    apps_path = os.path.join(application_path, 'apps.yaml')
+
+    with open(apps_path, 'r') as file:
         apps = yaml.safe_load(file)
         print(apps)
     return apps
