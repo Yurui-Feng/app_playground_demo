@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo App Launcher</title>
+</head>
+<body>
+    <h1>Select an App to Start or Stop</h1>
+    <table border="1">
+        <tr>
+            <th>App Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for key, app in demo_apps.items() %}
+        <tr>
+            <td>{{ app.name }}</td>
+            <td>{{ container_status[key] }}</td>
+            <td>
+                {% if container_status[key] == 'running' %}
+                    <a href="{{ url_for('stop_app', app_name=key) }}">Stop</a>
+                    {% if app.ports %}
+                        <a href="http://localhost:{{ app.ports[0].split(':')[0] }}">View App</a>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('start_app', app_name=key) }}">Start</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
